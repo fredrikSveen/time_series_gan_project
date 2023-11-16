@@ -41,8 +41,8 @@ def reshape_dfs(dfs):
 
 def correlate_dfs(standard_df):
     all_dfs = pd.DataFrame()
-    for name, df in standard_df.items():
-        all_dfs[name] = df.dropna()
+    # for name, df in standard_df.items():
+    #     all_dfs[name] = df.dropna()
 
     corr = all_dfs.corr()
     corr.style.background_gradient()
