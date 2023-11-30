@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib import colors
+import matplotlib.dates as mdates
 import numpy as np
 import pandas as pd
 import seaborn as sn
@@ -7,13 +8,21 @@ from scipy.stats import entropy
 
 
 def plot_sensor_data(name, df):
-    plt.plot(df[name], label=name)
+    x = df[name]
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%Y'))
+    plt.gca().xaxis.set_major_locator(mdates.DayLocator())
+    # plt.xticks(np.arange(min(x), max(x)+1, 500.0))
+    plt.plot(x, label=name)
+    plt.gcf().autofmt_xdate()
     plt.legend()
+    plt.title(f'Time series of sensor: {name}')
     plt.show()
 
 def plot_all_nine_sensors(dataframe, title="Timeseries of 9 nine sensors"):
     plt.figure(figsize=(15, 9))
     plt.suptitle(title)
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d/%m/%Y'))
+    plt.gca().xaxis.set_major_locator(mdates.DayLocator())
     rows = 3
     cols = 3
     n = rows * cols
@@ -22,6 +31,7 @@ def plot_all_nine_sensors(dataframe, title="Timeseries of 9 nine sensors"):
         plt.subplot(rows, cols, index)
         index += 1
         plt.plot(df)
+        plt.gcf().autofmt_xdate()
         plt.title(name)
     plt.show()
 
@@ -32,7 +42,7 @@ def reshape_dfs(dfs):
     reshape_dfs = {}
 
     for name, df in dfs.items():
-        r_df = reshape_df(df)
+        r_df = reshape_df(df).fillna(method='ffill')
         print(f'Original shape: {df.shape} Resampled shape: {r_df.shape}')
         reshape_dfs[name] = r_df
 
@@ -41,8 +51,8 @@ def reshape_dfs(dfs):
 
 def correlate_dfs(standard_df):
     all_dfs = pd.DataFrame()
-    # for name, df in standard_df.items():
-    #     all_dfs[name] = df.dropna()
+    for name, df in standard_df.items():
+        all_dfs[name] = df
 
     corr = all_dfs.corr()
     corr.style.background_gradient()
@@ -60,7 +70,7 @@ def standardize_dfs(dfs):
     standard_df = {}
     for name, df in dfs.items():
         tmp_df,avg,std = standardize_df(df)
-        print(f'{name}: Avg: {avg} Std: {std} Shape: {tmp_df.shape}')
+        # print(f'{name}: Avg: {avg} Std: {std} Shape: {tmp_df.shape}')
         standard_df[name] = tmp_df
 
     return standard_df
