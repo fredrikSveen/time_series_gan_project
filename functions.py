@@ -7,6 +7,8 @@ import seaborn as sn
 from scipy.stats import entropy
 
 
+###########################################################################
+# Functions for plotting
 def plot_sensor_data(name, df):
     x = df[name]
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%Y'))
@@ -35,6 +37,18 @@ def plot_all_nine_sensors(dataframe, title="Timeseries of 9 nine sensors"):
         plt.title(name)
     plt.show()
 
+def plot_kl(KL, title="KL divergence"):
+    # print(KL)
+    # im = plt.imshow(KL, norm=colors.LogNorm())
+    # plt.colorbar(im)
+
+    sn.heatmap(KL, annot=True)
+    plt.title(title)
+    plt.show()
+
+###########################################################################
+
+# Functions for reshaping
 def reshape_df(df):
     return df.resample('30S').mean().ffill() #Using ffill to replace Nan with their previous value. "30S" means resample to 1 sample per 30 seconds.
 
@@ -49,6 +63,10 @@ def reshape_dfs(dfs):
     print("Reshaping done")    
     return reshape_dfs
 
+###########################################################################
+
+#Functions for correlation
+
 def correlate_dfs(standard_df):
     all_dfs = pd.DataFrame()
     for name, df in standard_df.items():
@@ -59,6 +77,10 @@ def correlate_dfs(standard_df):
     print(corr)
     sn.heatmap(corr, annot=True)
     plt.show()
+
+###########################################################################
+    
+# Functions for standardization
 
 def standardize_df(df):
     avg = df.mean().iloc[0]
@@ -74,6 +96,10 @@ def standardize_dfs(dfs):
         standard_df[name] = tmp_df
 
     return standard_df
+
+###########################################################################
+
+# Functiond for KL Divergence
 
 def KL_with_params(m1, std1, m2, std2):
     return np.log(std2/std1)+(std1**2 + (m1-m2)**2)/(2*std2**2)-1/2
@@ -110,14 +136,6 @@ def mv_kl_dfs(dfs):
         KL.append(row)
     return KL
 
-def plot_kl(KL, title="KL divergence"):
-    # print(KL)
-    # im = plt.imshow(KL, norm=colors.LogNorm())
-    # plt.colorbar(im)
-
-    sn.heatmap(KL, annot=True)
-    plt.title(title)
-    plt.show()
 
 def kl_mvn(m0, S0, m1, S1):
     """
