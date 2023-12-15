@@ -7,8 +7,6 @@ import pandas as pd
 import seaborn as sn
 from scipy.stats import entropy
 
-#Plot nice looking dates on x-axis: https://stackoverflow.com/questions/9627686/plotting-dates-on-the-x-axis
-
 ###########################################################################
 # Functions for plotting
 def plot_sensor_data(name, df):
@@ -138,18 +136,6 @@ def mv_kl_dfs(dfs):
             row.append(kl_tmp)
         KL.append(row)
     return KL
-
-def plot_kl(KL, axis_labels, title="KL divergence", norm = None):
-    if norm is "log":
-        sn.heatmap(KL, norm=LogNorm(), xticklabels=axis_labels, yticklabels=axis_labels)
-    else:
-        sn.heatmap(KL, annot=True, xticklabels=axis_labels, yticklabels=axis_labels)
-    plt.title(title)
-    plt.show()
-    # print(KL)
-    # im = plt.imshow(KL, norm=colors.LogNorm())
-    # plt.colorbar(im)
-
    
 
 def kl_mvn(m0, S0, m1, S1):
