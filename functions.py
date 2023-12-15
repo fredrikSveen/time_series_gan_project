@@ -1,11 +1,13 @@
 import matplotlib.pyplot as plt
 from matplotlib import colors
 import matplotlib.dates as mdates
+from matplotlib.colors import LogNorm, Normalize
 import numpy as np
 import pandas as pd
 import seaborn as sn
 from scipy.stats import entropy
 
+#Plot nice looking dates on x-axis: https://stackoverflow.com/questions/9627686/plotting-dates-on-the-x-axis
 
 ###########################################################################
 # Functions for plotting
@@ -67,16 +69,17 @@ def reshape_dfs(dfs):
 
 #Functions for correlation
 
-def correlate_dfs(standard_df):
+def correlate_dfs(standard_df, title = "Correlation between sensors"):
     all_dfs = pd.DataFrame()
     for name, df in standard_df.items():
-        all_dfs[name] = df
+        all_dfs[name] = df.reset_index(drop=True)
 
     corr = all_dfs.corr()
     corr.style.background_gradient()
-    print(corr)
     sn.heatmap(corr, annot=True)
+    plt.title(title)
     plt.show()
+
 
 ###########################################################################
     
@@ -136,6 +139,18 @@ def mv_kl_dfs(dfs):
         KL.append(row)
     return KL
 
+def plot_kl(KL, axis_labels, title="KL divergence", norm = None):
+    if norm is "log":
+        sn.heatmap(KL, norm=LogNorm(), xticklabels=axis_labels, yticklabels=axis_labels)
+    else:
+        sn.heatmap(KL, annot=True, xticklabels=axis_labels, yticklabels=axis_labels)
+    plt.title(title)
+    plt.show()
+    # print(KL)
+    # im = plt.imshow(KL, norm=colors.LogNorm())
+    # plt.colorbar(im)
+
+   
 
 def kl_mvn(m0, S0, m1, S1):
     """
