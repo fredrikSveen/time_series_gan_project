@@ -1,4 +1,5 @@
-# first !pip install cognite-sdk
+# First time you use it, you need to
+#!pip install cognite-sdk
 
 from cognite.client import CogniteClient, ClientConfig
 from cognite.client.credentials import OAuthInteractive
