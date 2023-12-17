@@ -20,7 +20,7 @@ def plot_sensor_data(name, df):
     plt.title(f'Time series of sensor: {name}')
     plt.show()
 
-def plot_all_nine_sensors(dataframe, title="Timeseries of 9 nine sensors"):
+def plot_all_nine_sensors(dataframe, title="Timeseries of 9 sensors"):
     plt.figure(figsize=(15, 9))
     plt.suptitle(title)
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d/%m/%Y'))
